@@ -1,11 +1,10 @@
 
-name: Build Android APK
+name: Build TPHAT ALPHA APK
 
 on:
   workflow_dispatch:
-
-permissions:
-  contents: read
+  push:
+    branches: [main]
 
 jobs:
   build:
@@ -19,19 +18,18 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: '17'
+          java-version: "17"
 
-      - name: Set up Android SDK
-        uses: android-actions/setup-android@v3
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: "8.9"
 
-      - name: Build APK
-        run: |
-          chmod +x gradlew
-          ./gradlew assembleDebug
+      - name: Build debug APK
+        run: gradle assembleDebug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: Android-debug-APK
-          path: '**/build/outputs/apk/debug/*.apk'
-          if-no-files-found: error
+          name: TPHAT-ALPHA-APK
+          path: app/build/outputs/apk/debug/*.apk
